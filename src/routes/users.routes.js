@@ -11,7 +11,4 @@ router.get("/userByUsername/:username", getUserByUsername);
 router.get("/userByEmail/:email", getUserByEmail);
 router.post("/registerUser", registerUser);
 
-// router.get("/alumnos/:id", getAlumnos);
-// router.post("/notas", grabarNotas);
-
 export default router; //exportamos

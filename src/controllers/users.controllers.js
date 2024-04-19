@@ -1,13 +1,24 @@
-import conexion from "../mysql_conector.js"
+import conexion from "../mysql_conector.js";
+import bcrypt from 'bcryptjs';
 
 //Get one user with POST method by username and password
 export const getUserForLogin = async (req, res) => {
     try {
         const { email, passw } = req.body;
 
-        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol FROM tfg_users WHERE email = ? AND passw = ?", [email, passw]);
+        const [result] = await conexion.query("SELECT user_id, username, passw, fullname, email, biography, points, rol FROM tfg_users WHERE email = ?", [email]);
         console.log(result);
-        res.status(200).json(result);
+        //Comprobamos si la contraseña enviada y la recibida de la base de datos son iguales
+        const equalPass = await bcrypt.compare(passw, result[0].passw);
+
+        console.log(equalPass);
+
+        //Si son iguales devolvemos el usuario como respuesta
+        if(equalPass){
+            res.status(200).json(result);
+        } else { //En caso contrario devolvemos un array vacio
+            res.status(200).json([]);
+        } 
     } catch (error) {
         console.log(error.message)
         res.status(500).json({
@@ -80,6 +91,7 @@ export const getUserByEmail = async (req, res) => {
     }
 };
 
+//Funcion para registrar un usuario en la aplicación
 export const registerUser = async (req, res) => {
     try {
         const { username, fullname, email, passw } = req.body;
