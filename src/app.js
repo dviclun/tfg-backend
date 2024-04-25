@@ -1,7 +1,8 @@
 "use strict"
 
 import express from 'express';
-import router from './routes/users.routes.js';
+import usersRouter from './routes/users.routes.js';
+import trainingsRouter from './routes/trainings.routes.js';
 import cors from 'cors';
 
 import { PORT } from './config.js'
@@ -14,7 +15,8 @@ app.use(cors());
 //middleware
 app.use(express.json());
 
-app.use(router);
+app.use(usersRouter);
+app.use(trainingsRouter);
 //servidor a la escucha por el puerto 3000
 
 //middlewarre, controlar si se pasa una ruta en la url
