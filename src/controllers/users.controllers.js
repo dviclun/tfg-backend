@@ -110,6 +110,25 @@ export const registerUser = async (req, res) => {
     }
 }
 
+export const updateUserPoints = async (req, res) => {
+    try {
+        const { addPoints, user_id} = req.body;
+
+        const [result] = await conexion.query("UPDATE tfg_users SET points = ? + (SELECT points FROM tfg_users WHERE user_id = ?) WHERE user_id = ? ", [addPoints, user_id, user_id]);
+
+        if(result.affectedRows > 0){
+            res.status(200).json({message: 'Points updated sucessfully'})
+        } else {
+            res.status(500).json({message: 'User ID not found'})
+        }
+    } catch(error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+}
+
 
 
 // export const getCursos = async (req, res) => {
