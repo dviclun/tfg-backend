@@ -30,7 +30,21 @@ export const getUserForLogin = async (req, res) => {
 //Get all the users
 export const getUsers = async (req, res) => {
     try {
-        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol FROM tfg_users ORDER BY points");
+        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol FROM tfg_users ORDER BY points DESC");
+        console.log(result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+};
+
+//Get 10 users for ranking
+export const getUsersForRanking = async (req, res) => {
+    try {
+        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol FROM tfg_users ORDER BY points DESC LIMIT 10");
         console.log(result);
         res.status(200).json(result);
     } catch (error) {
