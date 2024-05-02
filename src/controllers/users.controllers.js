@@ -30,7 +30,7 @@ export const getUserForLogin = async (req, res) => {
 //Get all the users
 export const getUsers = async (req, res) => {
     try {
-        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol FROM tfg_users");
+        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol FROM tfg_users ORDER BY points");
         console.log(result);
         res.status(200).json(result);
     } catch (error) {
