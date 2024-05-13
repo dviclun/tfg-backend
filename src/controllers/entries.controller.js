@@ -1,0 +1,68 @@
+import conexion from "../mysql_conector.js";
+
+export const getEntries = async (req, res) => {
+    try {
+        const [result] = await conexion.query("SELECT * FROM tfg_entries ORDER BY entry_date DESC, entry_id DESC");
+        console.log(result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+};
+
+export const getEntryResponses = async (req, res) => {
+    try {
+        const {entry_id} = req.params;
+        const [result] = await conexion.query("SELECT tfg_entry_responses.entry_response_id, tfg_entry_responses.entry_id, tfg_entry_responses.user_id, tfg_entry_responses.entry_response_date, tfg_entry_responses.entry_response_body, tfg_users.username FROM tfg_entry_responses JOIN tfg_users ON tfg_entry_responses.user_id = tfg_users.user_id WHERE tfg_entry_responses.entry_id = ?", [entry_id]);
+        console.log(result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+};
+
+export const addEntry = async (req, res) => {
+    try {
+
+        const {user_id, entry_title, entry_body} = req.body;
+
+        const [result] = await conexion.query("INSERT INTO tfg_entries VALUES(NULL, ?,?,?, CURDATE())", [user_id, entry_title, entry_body]);
+
+        console.log(result);
+
+        res.status(201).json({ id: result.insertId });
+
+        
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+}
+
+export const addEntryResponse = async (req, res) => {
+    try {
+
+        const {entry_id, user_id, entry_response_body} = req.body;
+
+        const [result] = await conexion.query("INSERT INTO tfg_entry_responses VALUES(NULL, ?,?, CURDATE(),?)", [entry_id, user_id, entry_response_body]);
+
+        console.log(result);
+
+        res.status(201).json({ id: result.insertId });
+
+        
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+}

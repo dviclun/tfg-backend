@@ -6,6 +6,7 @@ import trainingsRouter from './routes/trainings.routes.js';
 import cors from 'cors';
 
 import { PORT } from './config.js'
+import entriesRouter from './routes/entries.routes.js';
 //import './config.js'
 
 const app = express(); //creado el objeto con la instacia de express
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use(usersRouter);
 app.use(trainingsRouter);
+app.use(entriesRouter);
 //servidor a la escucha por el puerto 3000
 
 //middlewarre, controlar si se pasa una ruta en la url
