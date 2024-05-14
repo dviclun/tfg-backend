@@ -1,6 +1,6 @@
 "use strict"
 import { Router } from 'express'
-import { getUserByEmail, getUserByID, getUserByUsername, getUserForLogin, getUsers, getUsersForRanking, registerUser, updateUserPoints } from '../controllers/users.controllers.js';
+import { getUserByEmail, getUserByID, getUserByUsername, getUserForLogin, getUsers, getUsersForRanking, registerUser, updateUserPoints, verifyCaptcha } from '../controllers/users.controllers.js';
 
 const usersRouter = Router();
 
@@ -12,5 +12,6 @@ usersRouter.get("/userByUsername/:username", getUserByUsername);
 usersRouter.get("/userByEmail/:email", getUserByEmail);
 usersRouter.post("/registerUser", registerUser);
 usersRouter.put("/updatePoints", updateUserPoints);
+usersRouter.post('/verifyCaptcha', verifyCaptcha);
 
 export default usersRouter; //exportamos

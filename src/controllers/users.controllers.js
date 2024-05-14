@@ -1,5 +1,6 @@
 import conexion from "../mysql_conector.js";
 import bcrypt from 'bcryptjs';
+import fetch from 'node-fetch';
 
 //Get one user with POST method by username and password
 export const getUserForLogin = async (req, res) => {
@@ -104,6 +105,36 @@ export const getUserByEmail = async (req, res) => {
         })
     }
 };
+
+//Funcion para verificar el recaptcha
+
+export const verifyCaptcha = async(req, res) => {
+    try {
+        const {token} = req.body;
+
+        const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=6Le3qtspAAAAAEq8ALjmR445XPAyYgievlXEK6Vn&response=${token}`, {
+            method: 'POST'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Verificación exitosa
+            res.json({ success: true });
+          } else {
+            // Verificación fallida
+            res.status(400).json({ success: false, error: data['error-codes'] });
+          }
+        
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+
+
+}
 
 //Funcion para registrar un usuario en la aplicación
 export const registerUser = async (req, res) => {
