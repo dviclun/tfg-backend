@@ -113,6 +113,26 @@ export const deleteVideo = async (req, res) => {
 
 }
 
+export const editVideo = async (req, res) => {
+    try {
+        const {video_id, video_title_es, video_title_en, video_url, muscular_group, difficulty} = req.body;
+
+        const [result] = await conexion.query("UPDATE tfg_training_videos SET video_title_es = ?, video_title_en = ?, video_url = ?, muscular_group = ?, difficulty = ? WHERE video_id = ?", [video_title_es, video_title_en, video_url, muscular_group, difficulty, video_id])
+        
+        if(result.affectedRows > 0){
+            res.status(200).json({message: 'Deleted sucessfully'})
+        } else {
+            res.status(500).json({message: 'Video ID not found'})
+        }
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+}
+
 
 export const getTrainings = async (req, res) => {
     try {

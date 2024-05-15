@@ -1,6 +1,6 @@
 "use strict"
 import { Router } from 'express'
-import { addDailyTraining, addVideo, deleteVideo, getArmsVideos, getLegsVideos, getMuscularGroupById, getMuscularGroups, getTodayUserTraining, getTrainings, getVideosByGroup } from '../controllers/trainings.controllers.js';
+import { addDailyTraining, addVideo, deleteVideo, getArmsVideos, getLegsVideos, getMuscularGroupById, getMuscularGroups, getTodayUserTraining, getTrainings, getVideosByGroup, editVideo } from '../controllers/trainings.controllers.js';
 
 const trainingsRouter = Router();
 
@@ -14,6 +14,7 @@ trainingsRouter.delete("/videos", deleteVideo);
 trainingsRouter.get("/trainings", getTrainings);
 trainingsRouter.get("/todaysTraining/:user_id", getTodayUserTraining);
 trainingsRouter.post("/registerTraining", addDailyTraining);
+trainingsRouter.post("/editVideo", editVideo)
 
 
 
