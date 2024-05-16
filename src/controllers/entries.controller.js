@@ -66,3 +66,24 @@ export const addEntryResponse = async (req, res) => {
         })
     }
 }
+
+export const deleteEntry = async (req, res) => {
+    try {
+        const {entry_id} = req.body;
+
+        const [result] = await conexion.query("DELETE FROM tfg_entries WHERE entry_id = ?", [entry_id]);
+
+        if(result.affectedRows > 0){
+            res.status(200).json({message: 'Deleted sucessfully'})
+        } else {
+            res.status(500).json({message: 'Entry ID not found'})
+        }
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+
+}
