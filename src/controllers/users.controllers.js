@@ -16,7 +16,15 @@ export const getUserForLogin = async (req, res) => {
 
         //Si son iguales devolvemos el usuario como respuesta
         if(equalPass){
-            res.status(200).json(result);
+            res.status(200).json([{
+                user_id: result[0].user_id,
+                username: result[0].username,
+                fullname: result[0].fullname,
+                email: result[0].email,
+                biography: result[0].biography,
+                points: result[0].points,
+                rol: result[0].rol
+            }]);
         } else { //En caso contrario devolvemos un array vacio
             res.status(200).json([]);
         } 
