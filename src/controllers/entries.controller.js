@@ -93,7 +93,7 @@ export const deleteResponse = async (req, res) => {
     try {
         const {entry_response_id} = req.body;
 
-        const [result] = await conexion.query("DELETE FROM tfg_entry_responses WHERE entry_id = ?", [entry_response_id]);
+        const [result] = await conexion.query("DELETE FROM tfg_entry_responses WHERE entry_response_id = ?", [entry_response_id]);
 
         if(result.affectedRows > 0){
             res.status(200).json({message: 'Deleted sucessfully'})
