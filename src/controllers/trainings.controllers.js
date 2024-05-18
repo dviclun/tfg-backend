@@ -183,3 +183,19 @@ export const addDailyTraining = async (req, res) => {
         })
     }
 }
+
+export const getNumberOfTrainings = async (req, res) => {
+    try {
+
+        const { user_id } = req.params
+        const [result] = await conexion.query("SELECT COUNT(user_id) AS number_of_trainings FROM tfg_training_records WHERE user_id = ?", [user_id]);
+
+        res.status(200).json(result); //la  respuesta que devuelve el servidor
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+
+}

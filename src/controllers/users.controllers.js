@@ -182,6 +182,26 @@ export const updateUserPoints = async (req, res) => {
     }
 }
 
+export const updateBiography = async (req, res) => {
+    try {
+        const {biography, user_id} = req.body;
+
+        const [result] = await conexion.query("UPDATE tfg_users SET biography = ? WHERE user_id = ?", [biography, user_id]);
+
+        if(result.affectedRows > 0){
+            res.status(200).json({message: 'Biography updated sucessfully'})
+        } else {
+            res.status(500).json({message: 'User ID not found'})
+        }
+        
+    } catch(error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        })
+    }
+}
+
 
 
 // export const getCursos = async (req, res) => {
