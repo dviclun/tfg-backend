@@ -1,13 +1,21 @@
 import conexion from "../mysql_conector.js";
 import bcrypt from 'bcryptjs';
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from "path";
+import { fileURLToPath } from 'url';
+import { promises as fsPromises } from 'fs';
+
+// Obtener __dirname en un módulo ES
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 //Get one user with POST method by username and password
 export const getUserForLogin = async (req, res) => {
     try {
         const { email, passw } = req.body;
 
-        const [result] = await conexion.query("SELECT user_id, username, passw, fullname, email, biography, points, rol FROM tfg_users WHERE email = ?", [email]);
+        const [result] = await conexion.query("SELECT user_id, username, passw, fullname, email, biography, points, rol, profile_image FROM tfg_users WHERE email = ?", [email]);
         console.log(result);
         //Comprobamos si la contraseña enviada y la recibida de la base de datos son iguales
         const equalPass = await bcrypt.compare(passw, result[0].passw);
@@ -23,7 +31,8 @@ export const getUserForLogin = async (req, res) => {
                 email: result[0].email,
                 biography: result[0].biography,
                 points: result[0].points,
-                rol: result[0].rol
+                rol: result[0].rol,
+                profile_image: result[0].profile_image
             }]);
         } else { //En caso contrario devolvemos un array vacio
             res.status(200).json([]);
@@ -203,64 +212,75 @@ export const updateBiography = async (req, res) => {
 }
 
 
+export const uploadUserImage = async(req,res) => {
+    try {
+        const {user_id} = req.body;
+        if(req.file){
 
-// export const getCursos = async (req, res) => {
-//     try {
-//         const [result] = await conexion.query("SELECT * FROM cursos");
-//         console.log(result);
-//         res.status(200).json(result);
-//     } catch (error) {
-//         console.log(error.message)
-//         res.status(500).json({
-//             message: "Error en el servidor"
-//         })
-//     }
+            //Eliminar la imagen anterior si existiera
+            const [resultDelete] = await conexion.query("SELECT profile_image FROM tfg_users WHERE user_id = ?", [user_id]);
+            let deleteImagePath = '';
 
-// };
+            if(resultDelete.length > 0){
+                deleteImagePath = path.join(__dirname, '..', '..', resultDelete[0].profile_image);
+            }
+            
+            //Si existe la imagen la borramos
+            if(resultDelete[0].profile_image !== ''){
+                if(fs.existsSync(deleteImagePath)){
+                    await fsPromises.unlink(deleteImagePath);
+                }
+            }
 
-// export const getModulos = async (req, res) => {
-//     try {
-//         console.log(req.params);
-//         const { id } = req.params
-//         const [result] = await conexion.query("SELECT * FROM modulos WHERE idCurso=?", [id]);
+            
 
-//         res.status(200).json(result); //la  respuesta que devuelve el servidor
+            //Guardar la imagen en el sistema de archivos
+            const originalName = req.file.originalname;
 
-//     } catch (error) {
-//         res.status(500).json({
-//             message: "Error en el servidor"
-//         })
-//     }
+            const timestamp = Date.now();
 
-// };
-// export const getAlumnos = async (req, res) => {
-//     try {
-//         console.log(req.params);
-//         const { id } = req.params
-//         const [result] = await conexion.query("SELECT * FROM alumnos WHERE idCurso=? order by apellidosNombre", [id]);
+            const fileExtension = path.extname(originalName);
+            const uniqueName = `${timestamp}${fileExtension}`;
 
-//         res.status(200).json(result); //la  respuesta que devuelve el servidor
+            
+            const imagePath = `uploads/${uniqueName}`;
+            fs.renameSync(req.file.path, imagePath);
 
-//     } catch (error) {
-//         res.status(500).json({
-//             message: "Error en el servidor"
-//         })
-//     }
+            //Guardar imagen en la base de datos
+            const [result] = await conexion.query("UPDATE tfg_users SET profile_image = ? WHERE user_id = ?", [imagePath, user_id]);
 
-// };
+            
+            if(result.affectedRows > 0){
+                res.status(200).json({message: 'Image updated sucessfully on database'})
+            } else {
+                res.status(500).json({message: 'User ID not found'})
+            }
 
-// export const grabarNotas = async (req, res) => {
-//     try {
-//         console.log(req.body);
-//         const { idCurso, idModulo, idAlumno, calificacion } = req.body;
+        } else {
+            res.status(400).json({message: 'Image not in the backend'})
+        }
 
-//         const [result] = await conexion.query("INSERT INTO calificaciones VALUES(NULL,?,?,?,?)", [idCurso, idModulo, idAlumno, calificacion]);
-//         console.log(result);
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor desde upload image"
+        })
+    }
+} 
 
-//         res.status(201).json({ id: result.insertId });
-//     } catch (error) {
-//         res.status(500).json({
-//             message: "Error en el servidor"
-//         })
-//     }
-// }
+export const getProfileImage = async(req,res) => {
+    try {
+        console.log(req.body);
+        const {user_id} = req.body;
+
+        const [result] = await conexion.query("SELECT profile_image FROM tfg_users WHERE user_id = ?", [user_id]);
+
+        res.status(200).json(result);
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor desde getProfileImage"
+        })
+    }
+}
