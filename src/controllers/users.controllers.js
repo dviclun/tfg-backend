@@ -78,7 +78,7 @@ export const getUserByID = async (req, res) => {
     try {
         const { user_id } = req.body;
 
-        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol FROM tfg_users WHERE user_id = ?", [user_id]);
+        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol, profile_image FROM tfg_users WHERE user_id = ?", [user_id]);
         console.log(result);
         res.status(200).json(result);
     } catch (error) {
@@ -95,7 +95,7 @@ export const getUserByUsername = async (req, res) => {
     try {
         const { username } = req.params;
 
-        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol FROM tfg_users WHERE username = ?", [username]);
+        const [result] = await conexion.query("SELECT user_id, username, fullname, email, biography, points, rol, profile_image FROM tfg_users WHERE username = ?", [username]);
         console.log(result);
         res.status(200).json(result);
     } catch (error) {

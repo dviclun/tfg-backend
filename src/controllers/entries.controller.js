@@ -16,7 +16,7 @@ export const getEntries = async (req, res) => {
 export const getEntryResponses = async (req, res) => {
     try {
         const {entry_id} = req.params;
-        const [result] = await conexion.query("SELECT tfg_entry_responses.entry_response_id, tfg_entry_responses.entry_id, tfg_entry_responses.user_id, tfg_entry_responses.entry_response_date, tfg_entry_responses.entry_response_body, tfg_users.username FROM tfg_entry_responses JOIN tfg_users ON tfg_entry_responses.user_id = tfg_users.user_id WHERE tfg_entry_responses.entry_id = ?", [entry_id]);
+        const [result] = await conexion.query("SELECT tfg_entry_responses.entry_response_id, tfg_entry_responses.entry_id, tfg_entry_responses.user_id, tfg_entry_responses.entry_response_date, tfg_entry_responses.entry_response_body, tfg_users.username, tfg_users.profile_image FROM tfg_entry_responses JOIN tfg_users ON tfg_entry_responses.user_id = tfg_users.user_id WHERE tfg_entry_responses.entry_id = ?", [entry_id]);
         console.log(result);
         res.status(200).json(result);
     } catch (error) {
