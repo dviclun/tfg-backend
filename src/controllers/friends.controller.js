@@ -97,3 +97,48 @@ export const deleteFriend = async(req, res) => {
         }) 
     }
 }
+
+
+export const acceptFriend = async(req, res) => {
+    try {
+        
+        const {applicant_id, requested_id} = req.body;
+
+        const [result] = await conexion.query("INSERT INTO tfg_friends VALUES(?,?)", [applicant_id, requested_id]);
+
+        const [result2] = await conexion.query("DELETE FROM tfg_friend_requests WHERE applicant_id = ? AND requested_id = ?", [applicant_id, requested_id])
+
+        if(result.affectedRows > 0 && result2.affectedRows > 0){
+            res.status(200).json({message: 'Accepted sucessfully'})
+        } else {
+            res.status(500).json({message: 'Something went wrong'})
+        }
+
+    } catch(error){
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        }) 
+    }
+}
+
+export const rejectFriend = async(req, res) => {
+    try {
+        const {applicant_id, requested_id} = req.body;
+
+        const [result] = await conexion.query("DELETE FROM tfg_friend_requests WHERE applicant_id = ? AND requested_id = ?", [applicant_id, requested_id])
+
+        if(result.affectedRows > 0){
+            res.status(200).json({message: 'Rejected sucessfully'})
+        } else {
+            res.status(500).json({message: 'Error rejecting friendship'})
+        }
+        
+    } catch(error){
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor"
+        }) 
+    }
+}
+
