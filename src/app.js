@@ -13,6 +13,7 @@ import entriesRouter from './routes/entries.routes.js';
 import friendsRouter from './routes/friends.routes.js';
 import chatRouter from './routes/chat.routes.js';
 import { createServer } from 'http';
+import requestsRouter from './routes/requests.routes.js';
 //import './config.js'
 
 // Obtener __dirname en un módulo ES
@@ -42,6 +43,7 @@ app.use(trainingsRouter);
 app.use(entriesRouter);
 app.use(friendsRouter);
 app.use(chatRouter);
+app.use(requestsRouter);
 //servidor a la escucha por el puerto 3000
 
 //middlewarre, controlar si se pasa una ruta en la url
