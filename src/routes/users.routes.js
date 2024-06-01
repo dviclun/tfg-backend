@@ -1,6 +1,6 @@
 "use strict"
 import { Router } from 'express'
-import { getProfileImage, getUserByEmail, getUserByID, getUserByUsername, getUserForLogin, getUsers, getUsersForRanking, registerUser, updateBiography, updateUserPoints, uploadUserImage, verifyCaptcha } from '../controllers/users.controllers.js';
+import { getProfileImage, getUserByEmail, getUserByID, getUserByUsername, getUserForLogin, getUsers, getUsersForRanking, registerUser, updateBiography, updateUserPoints, updateUserRole, uploadUserImage, verifyCaptcha } from '../controllers/users.controllers.js';
 import multer from 'multer';
 import fs from 'fs';
 
@@ -33,5 +33,6 @@ usersRouter.post('/verifyCaptcha', verifyCaptcha);
 usersRouter.put("/updateBio", updateBiography);
 usersRouter.post("/uploadUserImage", upload.single('image'), uploadUserImage);
 usersRouter.post("/getUserProfileImage", getProfileImage);
+usersRouter.post("/updateUserRole", updateUserRole);
 
 export default usersRouter; //exportamos

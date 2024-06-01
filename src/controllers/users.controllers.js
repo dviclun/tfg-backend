@@ -284,3 +284,24 @@ export const getProfileImage = async(req,res) => {
         })
     }
 }
+
+export const updateUserRole = async (req, res) => {
+    try {
+
+        const {user_id} = req.body;
+
+        const  [result] = await conexion.query("UPDATE tfg_users SET rol = 'suscriber' WHERE user_id = ?", [user_id]);
+
+        if(result.affectedRows > 0){
+            res.status(200).json({message: 'User role updated'})
+        } else {
+            res.status(500).json({message: 'User ID not found'})
+        }
+        
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: "Error en el servidor desde getProfileImage"
+        })
+    }
+}
