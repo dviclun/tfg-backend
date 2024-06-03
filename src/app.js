@@ -9,7 +9,7 @@ import { Stripe } from 'stripe';
 import { fileURLToPath } from 'url';
 import { Server } from 'socket.io';
 
-import { PORT, STRIPE_KEY } from './config.js'
+import { STRIPE_KEY } from './config.js'
 import entriesRouter from './routes/entries.routes.js';
 import friendsRouter from './routes/friends.routes.js';
 import chatRouter from './routes/chat.routes.js';
@@ -90,7 +90,7 @@ app.use((req, res) => {
 })
 
 //servidor a la escucha por el puerto 3000
-server.listen(PORT, () => {
+server.listen(process.env.PORT, () => {
     console.log('escuchando solicitud');
 })
 
