@@ -3,6 +3,7 @@ import { Router } from 'express'
 import { getProfileImage, getUserByEmail, getUserByID, getUserByUsername, getUserForLogin, getUsers, getUsersForRanking, registerUser, updateBiography, updateUserPoints, updateUserRole, uploadUserImage, verifyCaptcha } from '../controllers/users.controllers.js';
 import multer from 'multer';
 import fs from 'fs';
+import { registerUserValidator, updateBiographyValidator, updateUserPointsValidator } from '../validators/users.validators.js';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -27,10 +28,10 @@ usersRouter.get("/usersRanking", getUsersForRanking);
 usersRouter.post("/userById", getUserByID);
 usersRouter.get("/userByUsername/:username", getUserByUsername);
 usersRouter.get("/userByEmail/:email", getUserByEmail);
-usersRouter.post("/registerUser", registerUser);
-usersRouter.put("/updatePoints", updateUserPoints);
+usersRouter.post("/registerUser", registerUserValidator, registerUser);
+usersRouter.put("/updatePoints", updateUserPointsValidator, updateUserPoints);
 usersRouter.post('/verifyCaptcha', verifyCaptcha);
-usersRouter.put("/updateBio", updateBiography);
+usersRouter.put("/updateBio", updateBiographyValidator,updateBiography);
 usersRouter.post("/uploadUserImage", upload.single('image'), uploadUserImage);
 usersRouter.post("/getUserProfileImage", getProfileImage);
 usersRouter.post("/updateUserRole", updateUserRole);
