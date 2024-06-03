@@ -158,7 +158,7 @@ export const registerUser = async (req, res) => {
     try {
         const { username, fullname, email, passw } = req.body;
 
-        const [result] = await conexion.query("INSERT INTO tfg_users VALUES(NULL, ?,?,?,?,'',0,'member')", [username, passw, fullname, email]);
+        const [result] = await conexion.query("INSERT INTO tfg_users VALUES(NULL, ?,?,?,?,'',0,'member', '')", [username, passw, fullname, email]);
 
         console.log(result);
 
