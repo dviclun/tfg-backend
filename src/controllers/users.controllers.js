@@ -243,7 +243,7 @@ export const uploadUserImage = async(req,res) => {
             //     res.status(500).json({message: 'User ID not found'})
             // }
                 // console.log(req.file);
-                res.status(200).json({})
+                res.status(200).json(upload_stream)
 
 
         } else {
