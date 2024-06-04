@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from "path";
 import { fileURLToPath } from 'url';
 import { promises as fsPromises } from 'fs';
+import {v2 as cloudinary} from 'cloudinary';
 
 // Obtener __dirname en un módulo ES
 const __filename = fileURLToPath(import.meta.url);
@@ -217,22 +218,11 @@ export const uploadUserImage = async(req,res) => {
         const {user_id} = req.body;
         if(req.file){
 
-            //Eliminar la imagen anterior si existiera
-            const [resultDelete] = await conexion.query("SELECT profile_image FROM tfg_users WHERE user_id = ?", [user_id]);
-            let deleteImagePath = '';
-
-            if(resultDelete.length > 0){
-                deleteImagePath = path.join(__dirname, '..', '..', resultDelete[0].profile_image);
-            }
-            
-            //Si existe la imagen la borramos
-            if(resultDelete[0].profile_image !== ''){
-                if(fs.existsSync(deleteImagePath)){
-                    await fsPromises.unlink(deleteImagePath);
-                }
-            }
-
-            
+           cloudinary.config({
+                cloud_name: 'dy58mia9o',
+                api_key: '534857549217895',
+                api_secret: process.env.CLOUDINARY_SECRET
+           });
 
             //Guardar la imagen en el sistema de archivos
             const originalName = req.file.originalname;
@@ -242,19 +232,23 @@ export const uploadUserImage = async(req,res) => {
             const fileExtension = path.extname(originalName);
             const uniqueName = `${timestamp}${fileExtension}`;
 
-            
-            const imagePath = `uploads/${uniqueName}`;
-            fs.renameSync(req.file.path, imagePath);
+            const uploadResult = await cloudinary.uploader.upload(uniqueName);
+
+            console.log(uploadResult);
+
 
             //Guardar imagen en la base de datos
-            const [result] = await conexion.query("UPDATE tfg_users SET profile_image = ? WHERE user_id = ?", [imagePath, user_id]);
+            // const [result] = await conexion.query("UPDATE tfg_users SET profile_image = ? WHERE user_id = ?", [imagePath, user_id]);
 
             
-            if(result.affectedRows > 0){
-                res.status(200).json({message: 'Image updated sucessfully on database'})
-            } else {
-                res.status(500).json({message: 'User ID not found'})
-            }
+            // if(result.affectedRows > 0){
+            //     res.status(200).json({message: 'Image updated sucessfully on database'})
+            // } else {
+            //     res.status(500).json({message: 'User ID not found'})
+            // }
+
+                res.status(200).json(uploadResult)
+
 
         } else {
             res.status(400).json({message: 'Image not in the backend'})
