@@ -228,6 +228,7 @@ export const uploadUserImage = async(req,res) => {
             //Guardar la imagen en el sistema de archivos
            const upload_stream = cloudinary.uploader.upload_stream({folder: 'images'}, (error, result) => {
             console.log(result);  
+            //result.secure_url contiene la url de la imagen
             res.json({ public_id: result.public_id, url: result.secure_url }); 
            })
 
@@ -244,7 +245,7 @@ export const uploadUserImage = async(req,res) => {
             //     res.status(500).json({message: 'User ID not found'})
             // }
                 // console.log(req.file);
-                res.status(200).json(upload_stream.url)
+                res.status(200).json(response)
 
 
         } else {
