@@ -32,7 +32,7 @@ usersRouter.post("/registerUser", registerUserValidator, registerUser);
 usersRouter.put("/updatePoints", updateUserPointsValidator, updateUserPoints);
 usersRouter.post('/verifyCaptcha', verifyCaptcha);
 usersRouter.put("/updateBio", updateBiographyValidator,updateBiography);
-usersRouter.post("/uploadUserImage", upload.single('image'), uploadUserImage);
+usersRouter.post("/uploadUserImage", uploadUserImage);
 usersRouter.post("/getUserProfileImage", getProfileImage);
 usersRouter.post("/updateUserRole", updateUserRole);
 
