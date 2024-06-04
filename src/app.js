@@ -38,7 +38,8 @@ const io = new Server(server, {
 //habilitar CORS
 app.use(cors({
     origin: "http://localhost:5173",
-    credentials: true
+    credentials: true,
+    'Access-Control-Allow-Origin': '*'
 }));
 //middleware
 app.use(express.json());
