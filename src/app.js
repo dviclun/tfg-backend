@@ -36,13 +36,15 @@ const io = new Server(server, {
 });
 
 //habilitar CORS
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-    'Access-Control-Allow-Origin': '*'
-}));
+app.use(cors());
+
 //middleware
 app.use(express.json());
+app.use((req, res, next) => {
+    res.header({"Access-Control-Allow-Origin": "*"});
+    next();
+})
+
 //Servir archivos estaticos
 app.use('/uploads', express.static(path.join(__dirname,'..', 'uploads')));
 
