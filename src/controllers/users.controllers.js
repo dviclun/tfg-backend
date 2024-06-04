@@ -231,7 +231,8 @@ export const uploadUserImage = async(req,res) => {
             res.json({ public_id: result.public_id, url: result.secure_url }); 
            })
 
-           streamifier.createReadStream(req.file.buffer).pipe(upload_stream);
+           const response = streamifier.createReadStream(req.file.buffer).pipe(upload_stream);
+           console.log(response);
 
             //Guardar imagen en la base de datos
             // const [result] = await conexion.query("UPDATE tfg_users SET profile_image = ? WHERE user_id = ?", [imagePath, user_id]);
@@ -243,7 +244,7 @@ export const uploadUserImage = async(req,res) => {
             //     res.status(500).json({message: 'User ID not found'})
             // }
                 // console.log(req.file);
-                res.status(200).json(upload_stream)
+                res.status(200).json(upload_stream.url)
 
 
         } else {
