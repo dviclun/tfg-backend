@@ -19,6 +19,20 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_SECRET
 });
 
+const imageUpload = (req) => {
+    return new Promise((resolve, reject) => {
+        const upload_stream = cloudinary.uploader.upload_stream({folder: 'images'}, (error, result) => {
+            if(result){
+                resolve(result)
+            } else {
+                resolve(error)
+            }
+        })
+
+      streamifier.createReadStream(req.file.buffer).pipe(upload_stream);
+    })
+}   
+
 //Get one user with POST method by username and password
 export const getUserForLogin = async (req, res) => {
     try {
@@ -225,17 +239,10 @@ export const uploadUserImage = async(req,res) => {
     try {
         const {user_id} = req.body;
         if(req.file){
-            const image_url = '';
-            //Guardar la imagen en el sistema de archivos
-           const upload_stream = cloudinary.uploader.upload_stream({folder: 'images'}, (error, result) => {
-            console.log(result);  
-            image_url = result.secure_url;
-            //result.secure_url contiene la url de la imagen
-            res.json({ public_id: result.public_id, url: result.secure_url }); 
-           })
-
-           const response = streamifier.createReadStream(req.file.buffer).pipe(upload_stream);
-           console.log(image_url);
+            
+            let result = await imageUpload(req);
+            
+           console.log(result);
 
             //Guardar imagen en la base de datos
             // const [result] = await conexion.query("UPDATE tfg_users SET profile_image = ? WHERE user_id = ?", [imagePath, user_id]);
@@ -247,7 +254,7 @@ export const uploadUserImage = async(req,res) => {
             //     res.status(500).json({message: 'User ID not found'})
             // }
                 // console.log(req.file);
-                res.status(200).json({image_url})
+                res.status(200).json(result)
 
 
         } else {
@@ -299,3 +306,4 @@ export const updateUserRole = async (req, res) => {
         })
     }
 }
+
