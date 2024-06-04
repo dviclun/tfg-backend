@@ -225,16 +225,16 @@ export const uploadUserImage = async(req,res) => {
         if(req.file){
 
             //Guardar la imagen en el sistema de archivos
-            const originalName = req.file.originalname;
+            // const originalName = req.file.originalname;
 
-            const timestamp = Date.now();
+            // const timestamp = Date.now();
 
-            const fileExtension = path.extname(originalName);
-            const uniqueName = `${timestamp}${fileExtension}`;
+            // const fileExtension = path.extname(originalName);
+            // const uniqueName = `${timestamp}${fileExtension}`;
 
-            const uploadResult = await cloudinary.uploader.upload(uniqueName);
+            // const uploadResult = await cloudinary.uploader.upload(uniqueName);
 
-            console.log(uploadResult);
+            // console.log(uploadResult);
 
 
             //Guardar imagen en la base de datos
@@ -247,7 +247,7 @@ export const uploadUserImage = async(req,res) => {
             //     res.status(500).json({message: 'User ID not found'})
             // }
 
-                res.status(200).json({})
+                res.status(200).json(req.file)
 
 
         } else {

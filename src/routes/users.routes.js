@@ -5,11 +5,7 @@ import multer from 'multer';
 import fs from 'fs';
 import { registerUserValidator, updateBiographyValidator, updateUserPointsValidator } from '../validators/users.validators.js';
 
-const storage = multer.diskStorage({
-      filename: function (req, file, cb) {
-        cb(null, file.originalname) // Nombre original del archivo
-      }
-})
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage: storage });
 
