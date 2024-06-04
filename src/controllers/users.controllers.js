@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import { promises as fsPromises } from 'fs';
 import {v2 as cloudinary} from 'cloudinary';
 import streamifier from 'streamifier';
+import { url } from "inspector";
 
 // Obtener __dirname en un módulo ES
 const __filename = fileURLToPath(import.meta.url);
@@ -224,16 +225,17 @@ export const uploadUserImage = async(req,res) => {
     try {
         const {user_id} = req.body;
         if(req.file){
-
+            const image_url = '';
             //Guardar la imagen en el sistema de archivos
            const upload_stream = cloudinary.uploader.upload_stream({folder: 'images'}, (error, result) => {
             console.log(result);  
+            image_url = result.secure_url;
             //result.secure_url contiene la url de la imagen
             res.json({ public_id: result.public_id, url: result.secure_url }); 
            })
 
            const response = streamifier.createReadStream(req.file.buffer).pipe(upload_stream);
-           console.log(response);
+           console.log(image_url);
 
             //Guardar imagen en la base de datos
             // const [result] = await conexion.query("UPDATE tfg_users SET profile_image = ? WHERE user_id = ?", [imagePath, user_id]);
@@ -245,7 +247,7 @@ export const uploadUserImage = async(req,res) => {
             //     res.status(500).json({message: 'User ID not found'})
             // }
                 // console.log(req.file);
-                res.status(200).json(response)
+                res.status(200).json({image_url})
 
 
         } else {
