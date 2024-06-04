@@ -36,7 +36,10 @@ const io = new Server(server, {
 });
 
 //habilitar CORS
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 //middleware
 app.use(express.json());
 //Servir archivos estaticos
