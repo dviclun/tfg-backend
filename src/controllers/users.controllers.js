@@ -242,19 +242,18 @@ export const uploadUserImage = async(req,res) => {
             
             let {secure_url} = await imageUpload(req);
             
-           console.log(secure_url);
+           
 
             //Guardar imagen en la base de datos
-            // const [result] = await conexion.query("UPDATE tfg_users SET profile_image = ? WHERE user_id = ?", [imagePath, user_id]);
+             const [result] = await conexion.query("UPDATE tfg_users SET profile_image = ? WHERE user_id = ?", [secure_url, user_id]);
 
             
-            // if(result.affectedRows > 0){
-            //     res.status(200).json({message: 'Image updated sucessfully on database'})
-            // } else {
-            //     res.status(500).json({message: 'User ID not found'})
-            // }
-                // console.log(req.file);
-                res.status(200).json(secure_url)
+            if(result.affectedRows > 0){
+                res.status(200).json({message: 'Image updated sucessfully on database'})
+            } else {
+                res.status(500).json({message: 'User ID not found'})
+            }
+               
 
 
         } else {
