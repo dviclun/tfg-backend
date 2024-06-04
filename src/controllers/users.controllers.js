@@ -11,6 +11,12 @@ import {v2 as cloudinary} from 'cloudinary';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+cloudinary.config({
+    cloud_name: 'dy58mia9o',
+    api_key: '534857549217895',
+    api_secret: process.env.CLOUDINARY_SECRET
+});
+
 //Get one user with POST method by username and password
 export const getUserForLogin = async (req, res) => {
     try {
@@ -218,12 +224,6 @@ export const uploadUserImage = async(req,res) => {
         const {user_id} = req.body;
         if(req.file){
 
-           cloudinary.config({
-                cloud_name: 'dy58mia9o',
-                api_key: '534857549217895',
-                api_secret: process.env.CLOUDINARY_SECRET
-           });
-
             //Guardar la imagen en el sistema de archivos
             const originalName = req.file.originalname;
 
@@ -247,7 +247,7 @@ export const uploadUserImage = async(req,res) => {
             //     res.status(500).json({message: 'User ID not found'})
             // }
 
-                res.status(200).json(uploadResult)
+                res.status(200).json({})
 
 
         } else {
